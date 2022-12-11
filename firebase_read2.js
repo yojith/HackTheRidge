@@ -32,7 +32,7 @@ DrugDB.once("value").then(function(snapshot){
         document.getElementById("p_pharm").innerHTML = found_pharm
         document.getElementById("p_stock").innerHTML = found_stock
       } else {
-         console.log("none found");
+        console.log("none found");
       }
     }
   });

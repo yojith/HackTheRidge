@@ -1,13 +1,13 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCRTt9ge7sM2B8kr4k8eDxIZT9VzV-nLnw",
-  authDomain: "irhs-hackathon.firebaseapp.com",
-  databaseURL: "https://irhs-hackathon-default-rtdb.firebaseio.com",
-  projectId: "irhs-hackathon",
-  storageBucket: "irhs-hackathon.appspot.com",
-  messagingSenderId: "743528970902",
-  appId: "1:743528970902:web:70bdfecf6f02bed4d3e0b7",
-  measurementId: "G-FLZENRH5N9"
+    apiKey: "AIzaSyCRTt9ge7sM2B8kr4k8eDxIZT9VzV-nLnw",
+    authDomain: "irhs-hackathon.firebaseapp.com",
+    databaseURL: "https://irhs-hackathon-default-rtdb.firebaseio.com",
+    projectId: "irhs-hackathon",
+    storageBucket: "irhs-hackathon.appspot.com",
+    messagingSenderId: "743528970902",
+    appId: "1:743528970902:web:70bdfecf6f02bed4d3e0b7",
+    measurementId: "G-FLZENRH5N9"
 };
 
 // initialize firebase
