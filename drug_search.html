@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- links css stylesheets to html file -->
+        <link rel='stylesheet' href="https://unpkg.com/98.css">
+        <link rel='stylesheet' href="style.css">
+    </head>
+    <body>
+        <!-- contents of drug search screen -->
+        <h4>Drug Search</h4>
+        <form id="drugForm">
+            <h6>Enter the drug you are looking for:</h6><br>
+            <input type="text" id="drug_name" name="fname" style="height: 60px;"><br>
+            <input type="submit" id="submit" value="Submit" style="margin-top: 10px;">
+        </form>
+
+        <!-- search results -->
+        <h6>Drug Name</h6>
+        <h6 id="p_name"></h6>
+        <h6>Pharmacy Name</h6>
+        <h6 id="p_pharm"></h6>
+        <h6>Drug Stock</h6>
+        <h6 id="p_stock"></h6>
+    </body>
+
+    <!-- linking to database -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-database.js"></script>
+    <script src="./firebase_read1.js"></script>
+</html>
