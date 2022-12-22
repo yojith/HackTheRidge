@@ -2,16 +2,17 @@ button {
     font-size: 40px;
     padding: 10px;
     width: 400px;
-    margin-right: 50px;
-    margin-left:  50px;
+    margin-right: auto;
+    margin-left:  auto;
     margin-top: 0px;
 }
 
 input {
+    display: block;
     font-size: 40px;
     padding: 40px;
-    width: 400px;
-    margin-left: 560px;
+    width: 30%;
+    margin: auto;
 }
 
 h4 {
@@ -38,5 +39,49 @@ h6 {
 }
 
 form {
-    align-items: center;
+    margin: auto;
+    width: 80%;
+}
+
+table {
+    font-family: "Pixelated MS Sans Serif";
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    font-size: 20px;
+    border: 1px solid #ddd;
+    background-color: darkblue;
+    color: white;
+    padding: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+}
+
+td {
+    font-size: 15px;
+    border: 1px solid #ddd;
+    padding: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+}
+
+.button_holder {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.back_button {
+    font-size: 20px;
+    padding: 10px;
+    width: 40px;
+    margin-right: auto;
+    margin-left:  auto;
+    margin-top: 0px;
 }

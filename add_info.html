@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <title>Add Info</title>
         <!-- links css stylesheets to html file -->
         <link rel='stylesheet' href="https://unpkg.com/98.css">
         <link rel='stylesheet' href="style.css">
@@ -8,7 +10,10 @@
     <body>
         <!-- contents of the add info screen -->
         <h4>Add Information</h4>
-        <form id="drugForm">
+        <a href="home_page.html">
+            <button class="back_button">Back</button>
+        </a>
+        <form id="drug_add_form">
             <h6>Which drug have you found?</h6><br>
             <input type="text" id="drug_name" name="fname" style="height: 60px;"><br>
             <h6>Which pharmacy are you at?</h6><br>
@@ -20,6 +25,6 @@
         
         <!-- linking to firebase -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
-        <script src="./firebase_write.js"></script>
+        <script src="./firebase.js"></script>
     </body>
 </html>
