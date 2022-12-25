@@ -1,6 +1,3 @@
-import {initializeApp} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import {getDatabase, ref, child, onValue, push, update} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-
 // Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyCRTt9ge7sM2B8kr4k8eDxIZT9VzV-nLnw",
@@ -13,17 +10,14 @@ var firebaseConfig = {
   measurementId: "G-FLZENRH5N9"
 };
 // Initialize Firebase
-initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 // Defining the database as a variable
+var DrugDB = firebase.database().ref().child('Drug Database');
 
-const drugDatabase = child(ref(getDatabase()), 'Drug Database');
+var path = window.location.pathname;
+var page = path.split("/").pop();
 
-const path = window.location.pathname;
-const page = path.split("/").pop();
-
-// Used to display values
-const getElementVal = (id) => document.getElementById(id).value;
 
 // Reading the drug info from the database and storing in repective locations
 if (page === "add_info.html") {
@@ -45,26 +39,30 @@ else if (page === "drug_search.html") {
   });
 }
 
+
+// Used to display values
+const getElementVal = (id) => {
+  return document.getElementById(id).value;
+};
+
+
 // Save data from database to local variables
 const db_save_drug = (drug_name, drug_pharm, drug_stock) => {
-  const drug_entry_key = push(drugDatabase).key;
-  console.log(drug_entry_key);
-  const drug_entry = {[drug_entry_key] : {
-    drug_name : drug_name,
-    drug_pharm : drug_pharm,
-    drug_stock : drug_stock,
-  }};
-
-  update(drugDatabase, drug_entry);
+  var drug_db_set = DrugDB.push();
+  drug_db_set.set({
+      drug_name : drug_name,
+      drug_pharm : drug_pharm,
+      drug_stock : drug_stock,
+  });
 };
 
 
 function add_rows(table_id, drug_name, drug_pharm, drug_stock){
-  const results_table_body = document.getElementById("results_table_body");
-  const row = results_table_body.insertRow(-1);
-  const name_cell = row.insertCell(0);
-  const pharm_cell = row.insertCell(1);
-  const stock_cell = row.insertCell(2);
+  var results_table_body = document.getElementById("results_table_body");
+  var row = results_table_body.insertRow(-1);
+  var name_cell = row.insertCell(0);
+  var pharm_cell = row.insertCell(1);
+  var stock_cell = row.insertCell(2);
 
   name_cell.innerHTML = drug_name;
   pharm_cell.innerHTML = drug_pharm;
@@ -78,9 +76,9 @@ function delete_rows(table_body_id){
 
 
 function add_drug(){
-  const drug_name = getElementVal("drug_name");
-  const drug_pharm = getElementVal("drug_pharm");
-  const drug_stock = getElementVal("drug_stock");
+  var drug_name = getElementVal("drug_name");
+  var drug_pharm = getElementVal("drug_pharm");
+  var drug_stock = getElementVal("drug_stock");
 
   db_save_drug(drug_name, drug_pharm, drug_stock);
 
@@ -91,25 +89,27 @@ function add_drug(){
 
 
 function data_read(search_parameter){
-  onValue(DrugDB, (snapshot) => {
+  console.log(search_parameter)
+  DrugDB.once("value").then(function(snapshot){
 
-    const drug_info = snapshot.val();
-    const drug_keys = Object.keys(drug_info);
-    const user_input = getElementVal("user_input");
+    var drug_info=snapshot.val();
+    const drug_keys= Object.keys(drug_info);
+    var user_input = getElementVal("user_input");
 
     delete_rows("results_table");
 
     for (let i = 0; i < drug_keys.length; i++) {
-      const drug_obj = drug_keys[i];
+      drug_obj = drug_keys[i];
 
       if (drug_info[drug_obj][search_parameter] === user_input) {
-        const found_name = drug_info[drug_obj].drug_name;
-        const found_pharm = drug_info[drug_obj].drug_pharm;
-        const found_stock = drug_info[drug_obj].drug_stock;
-        add_rows("results_table", found_name, found_pharm, found_stock);
+
+        var found_name = drug_info[drug_obj].drug_name;
+        var found_pharm = drug_info[drug_obj].drug_pharm;
+        var found_stock = drug_info[drug_obj].drug_stock;
+        add_rows("results_table", found_name, found_pharm, found_stock)
+
       }
+
     }
-  }, {
-    onlyOnce: true
   });
 }

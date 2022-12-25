@@ -1,30 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" />
         <title>Add Info</title>
         <!-- links css stylesheets to html file -->
         <link rel='stylesheet' href="https://unpkg.com/98.css">
-        <link rel='stylesheet' href="style.css">
+        <link rel='stylesheet' href="./style.css">
     </head>
     <body>
         <!-- contents of the add info screen -->
         <h4>Add Information</h4>
-        <a href="home_page.html">
+        <a href="./home_page.html">
             <button class="back_button">Back</button>
         </a>
-        <form id="drug_add_form">
+        <div class="user_form">
             <h6>Which drug have you found?</h6><br>
             <input type="text" id="drug_name" name="fname" style="height: 60px;"><br>
             <h6>Which pharmacy are you at?</h6><br>
             <input type="text" id="drug_pharm" name="fname" style="height: 60px;"><br>
             <h6>How much stock do they have?</h6><br>
             <input type="text" id="drug_stock" name="fname" style="height: 60px;"><br>
-            <input type="submit" value="Submit" style="margin-top: 10px;">
-        </form>
-        
-        <!-- linking to firebase -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
-        <script src="./firebase.js"></script>
+            <button class="submit_button" id="submit_button">Submit</button>
+        </div>
     </body>
+
+    <!-- linking to firebase -->
+    <script type="module" src="./firebase.js"></script>
 </html>
