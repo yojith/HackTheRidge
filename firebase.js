@@ -1,5 +1,6 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import {getDatabase, ref, child, onValue, push, update} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import {getFirestore, collection, addDoc, query, where, getDocs} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import {getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -13,11 +14,14 @@ var firebaseConfig = {
   measurementId: "G-FLZENRH5N9"
 };
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
 // Defining the database as a variable
+const drugDatabase = collection(getFirestore(firebaseApp), "Drug Database");
 
-const drugDatabase = child(ref(getDatabase()), 'Drug Database');
+// Google authorization
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
 
 const path = window.location.pathname;
 const page = path.split("/").pop();
@@ -45,18 +49,28 @@ else if (page === "drug_search.html") {
   });
 }
 
-// Save data from database to local variables
-const db_save_drug = (drug_name, drug_pharm, drug_stock) => {
-  const drug_entry_key = push(drugDatabase).key;
-  console.log(drug_entry_key);
-  const drug_entry = {[drug_entry_key] : {
-    drug_name : drug_name,
-    drug_pharm : drug_pharm,
-    drug_stock : drug_stock,
-  }};
+if (page === "login.html") {
 
-  update(drugDatabase, drug_entry);
-};
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById("login_button").style.display = "none";
+      document.getElementById("logout_button").style.display = "block";
+      document.getElementById("user_details").style.display = "block";
+      showUserDetails(user);
+    } else {
+      document.getElementById("login_button").style.display = "block";
+      document.getElementById("logout_button").style.display = "none";
+      document.getElementById("user_details").style.display = "none";
+    }
+  });
+  
+  document.getElementById("login_button").addEventListener("click", function(){
+    login();
+  });
+  document.getElementById("logout_button").addEventListener("click", function(){
+    logout();
+  });
+}
 
 
 function add_rows(table_id, drug_name, drug_pharm, drug_stock){
@@ -77,39 +91,84 @@ function delete_rows(table_body_id){
 }
 
 
-function add_drug(){
+async function db_save_drug(drug_name, drug_pharm, drug_stock){
+  await addDoc(drugDatabase, {
+    drug_name : drug_name,
+    drug_pharm : drug_pharm,
+    drug_stock : drug_stock,
+  });
+}
+
+
+async function add_drug(){
   const drug_name = getElementVal("drug_name");
   const drug_pharm = getElementVal("drug_pharm");
   const drug_stock = getElementVal("drug_stock");
 
-  db_save_drug(drug_name, drug_pharm, drug_stock);
+  await db_save_drug(drug_name, drug_pharm, drug_stock);
 
   document.getElementById("drug_name").value="";
   document.getElementById("drug_pharm").value="";
   document.getElementById("drug_stock").value="";
 }
 
+async function data_read(search_parameter){
+  const user_input = getElementVal("user_input");
+  const drug_query = query(drugDatabase, where(search_parameter, "==", user_input));
+  const drug_docs = await getDocs(drug_query);
 
-function data_read(search_parameter){
-  onValue(DrugDB, (snapshot) => {
-
-    const drug_info = snapshot.val();
-    const drug_keys = Object.keys(drug_info);
-    const user_input = getElementVal("user_input");
-
-    delete_rows("results_table");
-
-    for (let i = 0; i < drug_keys.length; i++) {
-      const drug_obj = drug_keys[i];
-
-      if (drug_info[drug_obj][search_parameter] === user_input) {
-        const found_name = drug_info[drug_obj].drug_name;
-        const found_pharm = drug_info[drug_obj].drug_pharm;
-        const found_stock = drug_info[drug_obj].drug_stock;
-        add_rows("results_table", found_name, found_pharm, found_stock);
-      }
-    }
-  }, {
-    onlyOnce: true
+  delete_rows("results_table");
+  
+  drug_docs.forEach((doc) => {
+    const doc_data = doc.data()
+    const found_name = doc_data.drug_name;
+    const found_pharm = doc_data.drug_pharm;
+    const found_stock = doc_data.drug_stock;
+    add_rows("results_table", found_name, found_pharm, found_stock);
   });
 }
+
+function showUserDetails(user){
+  document.getElementById("user_details").innerHTML = `
+    <img src="${user.photoURL}" style="width:10%">
+    <p>Name: ${user.displayName}</p>
+    <p>Email: ${user.email}</p>
+  `
+}
+
+async function login(){
+  console.log("login");
+  document.getElementById("login_button").style.display = "none";
+  document.getElementById("logout_button").style.display = "block";
+  document.getElementById("user_details").style.display = "block";
+
+  await signInWithPopup(auth, provider).then((result) => {
+    showUserDetails(result.user);
+  }).catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    const email = error.email;
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(errorCode, errorMessage, email, credential);
+  });
+}
+
+async function logout(){
+  console.log("logout");
+  document.getElementById("login_button").style.display = "block";
+  document.getElementById("logout_button").style.display = "none";
+  document.getElementById("user_details").style.display = "none";
+
+  await signOut(auth).then(() => {
+    document.getElementById("user_details").innerHTML = `
+      <p>Logout Successful</p>
+    `
+  }).catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    const email = error.email;
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(errorCode, errorMessage, email, credential);
+  });
+}
+
