@@ -55,12 +55,10 @@ if (page === "login.html") {
     if (user) {
       document.getElementById("login_button").style.display = "none";
       document.getElementById("logout_button").style.display = "block";
-      document.getElementById("user_details").style.display = "block";
       showUserDetails(user);
     } else {
       document.getElementById("login_button").style.display = "block";
       document.getElementById("logout_button").style.display = "none";
-      document.getElementById("user_details").style.display = "none";
     }
   });
   
@@ -138,12 +136,11 @@ function showUserDetails(user){
 
 async function login(){
   console.log("login");
-  document.getElementById("login_button").style.display = "none";
-  document.getElementById("logout_button").style.display = "block";
-  document.getElementById("user_details").style.display = "block";
 
   await signInWithPopup(auth, provider).then((result) => {
     showUserDetails(result.user);
+    document.getElementById("login_button").style.display = "none";
+    document.getElementById("logout_button").style.display = "block";
   }).catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -155,14 +152,13 @@ async function login(){
 
 async function logout(){
   console.log("logout");
-  document.getElementById("login_button").style.display = "block";
-  document.getElementById("logout_button").style.display = "none";
-  document.getElementById("user_details").style.display = "none";
 
   await signOut(auth).then(() => {
     document.getElementById("user_details").innerHTML = `
       <p>Logout Successful</p>
     `
+    document.getElementById("login_button").style.display = "block";
+    document.getElementById("logout_button").style.display = "none";
   }).catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
