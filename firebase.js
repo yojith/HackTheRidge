@@ -29,46 +29,77 @@ const page = path.split("/").pop();
 // Used to display values
 const getElementVal = (id) => document.getElementById(id).value;
 
-// Reading the drug info from the database and storing in repective locations
-if (page === "add_info.html") {
-  document.getElementById("submit_button").addEventListener("click", function(){
+const add_info_submit_button = document.getElementById("add_info_submit_button");
+const pharm_search_submit_button = document.getElementById("pharm_search_submit_button");
+const drug_search_submit_button = document.getElementById("drug_search_submit_button");
+const login_container = document.getElementById("login_container")
+
+// Adding event listeners to the buttons in the webpage
+
+if (add_info_submit_button) {
+  add_info_submit_button.addEventListener("click", function(){
     add_drug();
   });
 }
 
-// Reading the drug info from the database and storing in repective locations
-else if (page === "pharm_search.html") {
-  document.getElementById("submit_button").addEventListener("click", function(){
+
+if (pharm_search_submit_button) {
+  pharm_search_submit_button.addEventListener("click", function(){
     data_read("drug_pharm");
   });
 }
 
-else if (page === "drug_search.html") {
-  document.getElementById("submit_button").addEventListener("click", function(){
+
+if (drug_search_submit_button) {
+  drug_search_submit_button.addEventListener("click", function(){
     data_read("drug_name");
   });
 }
 
-if (page === "login.html") {
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById("login_button").style.display = "none";
-      document.getElementById("logout_button").style.display = "block";
-      showUserDetails(user);
-    } else {
-      document.getElementById("login_button").style.display = "block";
-      document.getElementById("logout_button").style.display = "none";
+if (login_container) {
+  const login_button = document.getElementById("login_button");
+  const logout_button = document.getElementById("logout_button");
+  const google_login_button = document.getElementById("google_login_button");
+  const login_modal = document.getElementById("login_modal");
+  const span = document.getElementById("close");
+
+  login_button.addEventListener("click", function(){
+    console.log("login_button");
+    login_modal.style.display = "block";
+  });
+  span.addEventListener("click", function(){
+    console.log("span");
+    login_modal.style.display = "none";
+  });
+  window.addEventListener("click", function(event){
+    if (event.target == login_modal) {
+      console.log("window");
+      login_modal.style.display = "none"
     }
   });
   
-  document.getElementById("login_button").addEventListener("click", function(){
-    login();
-  });
-  document.getElementById("logout_button").addEventListener("click", function(){
+  logout_button.addEventListener("click", function(){
+    console.log("logout_button");
     logout();
   });
+  google_login_button.addEventListener("click", function(){
+    console.log("google_login_button");
+    google_login();
+  });
 }
+
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    login_button.style.display = "none";
+    logout_button.style.display = "block";
+    showUserDetails(user);
+  } else {
+    login_button.style.display = "block";
+    logout_button.style.display = "none";
+  }
+});
 
 
 function add_rows(table_id, drug_name, drug_pharm, drug_stock){
@@ -134,13 +165,11 @@ function showUserDetails(user){
   `
 }
 
-async function login(){
-  console.log("login");
-
+async function google_login(){
   await signInWithPopup(auth, provider).then((result) => {
     showUserDetails(result.user);
-    document.getElementById("login_button").style.display = "none";
-    document.getElementById("logout_button").style.display = "block";
+    login_button.style.display = "none";
+    logout_button.style.display = "block";
   }).catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -150,15 +179,14 @@ async function login(){
   });
 }
 
-async function logout(){
-  console.log("logout");
 
+async function logout(){
   await signOut(auth).then(() => {
     document.getElementById("user_details").innerHTML = `
       <p>Logout Successful</p>
     `
-    document.getElementById("login_button").style.display = "block";
-    document.getElementById("logout_button").style.display = "none";
+    login_button.style.display = "block";
+    logout_button.style.display = "none";
   }).catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;

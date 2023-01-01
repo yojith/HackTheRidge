@@ -2,21 +2,36 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Drug Search</title>
         <!-- links css stylesheets to html file -->
-        <link rel='stylesheet' href="https://unpkg.com/98.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
         <link rel='stylesheet' href="./style.css">
     </head>
     <body>
         <!-- contents of drug search screen -->
         <h4>Drug Search</h4>
         <a href="./home_page.html">
-            <button class="back_button">Back</button>
+            <button id="back_button">Back</button>
         </a>
+
+        <div id="login_container" class="login_container">
+            <div id="login_modal" class="modal">
+                <div class="modal_content">
+                    <span id="close" class="close">&times;</span>
+                    <button id="google_login_button" class="login_button">Login with Google</button>
+                    <button id="fb_login_button" class="login_button">Login with Facebook</button>
+                </div>
+            </div>
+            <button hidden id="login_button">Login</button>
+            <button hidden id="logout_button">Logout</button>
+            <div id="user_details"></div>
+        </div>
+
         <div class="user_form">
             <h6>Enter the drug you are looking for:</h6><br>
             <input type="text" id="user_input" name="fname"><br>
-            <button class="submit_button" id="submit_button">Submit</button>
+            <button class="submit_button" id="drug_search_submit_button">Submit</button>
         </div>
 
         <!-- search results -->
