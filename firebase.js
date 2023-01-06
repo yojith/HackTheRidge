@@ -32,7 +32,7 @@ const getElementVal = (id) => document.getElementById(id).value;
 const add_info_submit_button = document.getElementById("add_info_submit_button");
 const pharm_search_submit_button = document.getElementById("pharm_search_submit_button");
 const drug_search_submit_button = document.getElementById("drug_search_submit_button");
-const login_container = document.getElementById("login_container")
+const login_modal = document.getElementById("login_modal")
 
 // Adding event listeners to the buttons in the webpage
 
@@ -57,34 +57,28 @@ if (drug_search_submit_button) {
 }
 
 
-if (login_container) {
+if (login_modal) {
   const login_button = document.getElementById("login_button");
   const logout_button = document.getElementById("logout_button");
   const google_login_button = document.getElementById("google_login_button");
-  const login_modal = document.getElementById("login_modal");
   const span = document.getElementById("close");
 
   login_button.addEventListener("click", function(){
-    console.log("login_button");
     login_modal.style.display = "block";
   });
   span.addEventListener("click", function(){
-    console.log("span");
     login_modal.style.display = "none";
   });
   window.addEventListener("click", function(event){
     if (event.target == login_modal) {
-      console.log("window");
       login_modal.style.display = "none"
     }
   });
   
   logout_button.addEventListener("click", function(){
-    console.log("logout_button");
     logout();
   });
   google_login_button.addEventListener("click", function(){
-    console.log("google_login_button");
     google_login();
   });
 }
@@ -103,7 +97,7 @@ onAuthStateChanged(auth, (user) => {
 
 
 function add_rows(table_id, drug_name, drug_pharm, drug_stock){
-  const results_table_body = document.getElementById("results_table_body");
+  const results_table_body = document.getElementById(table_id).getElementsByTagName("tbody")[0];
   const row = results_table_body.insertRow(-1);
   const name_cell = row.insertCell(0);
   const pharm_cell = row.insertCell(1);
@@ -115,8 +109,8 @@ function add_rows(table_id, drug_name, drug_pharm, drug_stock){
 }
 
 
-function delete_rows(table_body_id){
-  document.getElementById("results_table_body").innerHTML = "";
+function delete_rows(table_id){
+  document.getElementById(table_id).getElementsByTagName("tbody")[0].innerHTML = "";
 }
 
 
@@ -159,9 +153,9 @@ async function data_read(search_parameter){
 
 function showUserDetails(user){
   document.getElementById("user_details").innerHTML = `
-    <img src="${user.photoURL}" style="width:10%">
-    <p>Name: ${user.displayName}</p>
-    <p>Email: ${user.email}</p>
+    <img src="${user.photoURL}" class="w3-image w3-circle" style="height:100%">
+    ${user.displayName}
+    ${user.email}
   `
 }
 
